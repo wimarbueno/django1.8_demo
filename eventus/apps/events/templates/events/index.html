@@ -1,0 +1,13 @@
+{% extends "events/base_events.html" %}
+
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+    {% for event in events %}
+        <p>
+        {{ event.name }}
+        <img src="{{ event.imagen.url }}" width="30" >
+        ruta: {{ event.imagen.url }}
+        </p>
+    {% endfor %}
+{% endblock content %}
