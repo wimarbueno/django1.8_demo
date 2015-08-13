@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Event, Category
 from .forms import EventoForm
 from apps.users.models import User
@@ -34,3 +34,32 @@ def crear_evento(request):
         modelform = EventoForm()
 
     return render(request, 'events/panel/crear_evento.html', {'form' : modelform})
+
+def detalle_evento(request, evento_id):
+    event = get_object_or_404(Event, pk = evento_id)
+    return render(request, 'events/panel/detalle_evento.html', {'event' : event})
+
+
+def editar_evento(request, evento_id):
+    event = get_object_or_404(Event, pk = evento_id)
+
+    if request.method == 'POST':
+        modelform = EventoForm(request.POST, request.FILES, instance = event)
+        if modelform.is_valid():
+            modelform.save()
+            return redirect(reverse('events_app:panel'))
+    else:
+        modelform = EventoForm(instance = event)
+        return render(request, 'events/panel/editar_evento.html', {'form' : modelform, 'event' : event})
+
+
+def eliminar_evento(request, evento_id):
+    event = get_object_or_404(Event, pk = evento_id)
+
+    if request.method == 'POST':
+        event.delete()
+        return redirect(reverse('events_app:panel'))
+
+    return render(request, 'events/panel/eliminar_evento.html', {'event' : event})
+
+
