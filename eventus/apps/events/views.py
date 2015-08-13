@@ -26,7 +26,7 @@ def crear_evento(request):
         modelform = EventoForm(request.POST, request.FILES)
         if modelform.is_valid():
             organizador = User.objects.get(pk = 1)
-            nuevo_evento = modelform.save()
+            nuevo_evento = modelform.save(commit = False)
             nuevo_evento.organizer = organizador
             nuevo_evento.save()
             return redirect(reverse('events_app:panel'))
