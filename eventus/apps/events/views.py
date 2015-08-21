@@ -38,7 +38,8 @@ class MainPanelView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(MainPanelView, self).get_context_data(**kwargs)
-        context['events'] = Event.objects.order_by('is_free', '-created')
+        #context['events'] = Event.objects.filter(organizer__username='wilzonmj').order_by('is_free', '-created')
+        context['events'] = Event.objects.filter(organizer = self.request.user).order_by('is_free', '-created')
         context['cantidad'] = context['events'].count()
         return context
 
@@ -63,7 +64,7 @@ class CreateEvent(CreateView):
     success_url = reverse_lazy('events_app:panel')
 
     def form_valid(self, form):
-        form.instance.organizer = User.objects.get(pk = 1)
+        form.instance.organizer = self.request.user #User.objects.get(pk = 1)
         return super(CreateEvent, self).form_valid(form)
 
 
@@ -98,7 +99,7 @@ class EventEdit(UpdateView):
     success_url = reverse_lazy('events_app:panel')
 
     def form_valid(self, form):
-        form.instance.organizer = User.objects.get(pk = 1)
+        form.instance.organizer = self.request.user #User.objects.get(pk = 1)
         return super(EventEdit, self).form_valid(form)
 
 
